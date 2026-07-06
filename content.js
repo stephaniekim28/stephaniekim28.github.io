@@ -1,8 +1,5 @@
-/* ============================================================
-   SITE CONTENT — this file IS the database.
-   Edit it with admin.html (recommended) or by hand, then replace
-   this file in your GitHub repo. The site updates in ~1 minute.
-   ============================================================ */
+/* SITE CONTENT — this file IS the database.
+   Edit with admin.html, then replace this file in your GitHub repo. */
 window.CONTENT = {
   "ribbon": [
     "philosophy",
@@ -256,7 +253,7 @@ window.CONTENT = {
     "updated": "July 2026"
   },
   "settings": {
-    "formspreeId": "",
+    "formspreeId": "mzdloqoe",
     "email": "stephaniekim0112@gmail.com"
   }
 };

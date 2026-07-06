@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stephanie Kim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MEADOW / FUTURE — sage & beige organic-futurism.
+   Clear, flowy, luminous: drifting aurora fields, a living
+   thread that connects every section, glass panels, and
+   motion that follows the reader.
+   ============================================================ */
+:root{
+  --beige:#F4EEDE;
+  --beige-2:#EEE5CF;
+  --sage:#9DB29A;
+  --sage-soft:#C3CFBB;
+  --sage-deep:#5F7A5C;
+  --pine:#2E3A2E;
+  --ink:#232A23;
+  --haze:#6E786B;
+  --glass:rgba(255,255,255,0.42);
+  --glass-line:rgba(95,122,92,0.22);
+
+  --display:'Bricolage Grotesque', sans-serif;
+  --serif:'Bricolage Grotesque', sans-serif;
+  --ui:'JetBrains Mono', monospace;
+  --body:'Schibsted Grotesk', sans-serif;
+  --mono:'JetBrains Mono', monospace;
+
+  --maxw:1100px;
+  --thread-x:38px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+section[id]{scroll-margin-top:100px;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms!important; animation-delay:0ms!important; transition-duration:0.01ms!important;}
+  .aurora,.aura{display:none!important;}
+}
+
+body{
+  margin:0;
+  background:var(--beige);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.7;
+  font-weight:400;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--sage-deep); color:var(--beige);}
+:focus-visible{outline:2px solid var(--sage-deep); outline-offset:3px;}
+
+/* ---------- ambient layers ---------- */
+.aurora{
+  position:fixed; inset:-20%;
+  z-index:0; pointer-events:none;
+  filter:blur(52px); opacity:.9;
+}
+.aurora .blob{
+  position:absolute; border-radius:50%;
+  mix-blend-mode:multiply;
+}
+.blob.b1{width:55vw;height:55vw; background:radial-gradient(circle, rgba(157,178,154,0.62), transparent 65%); top:-8%; left:-6%; animation:drift1 26s ease-in-out infinite alternate;}
+.blob.b2{width:48vw;height:48vw; background:radial-gradient(circle, rgba(224,210,175,0.88), transparent 65%); top:38%; right:-10%; animation:drift2 32s ease-in-out infinite alternate;}
+.blob.b3{width:40vw;height:40vw; background:radial-gradient(circle, rgba(150,175,160,0.48), transparent 65%); bottom:-12%; left:22%; animation:drift3 38s ease-in-out infinite alternate;}
+@keyframes drift1{to{transform:translate(9vw,12vh) scale(1.15);}}
+@keyframes drift2{to{transform:translate(-11vw,-9vh) scale(0.9);}}
+@keyframes drift3{to{transform:translate(7vw,-11vh) scale(1.1);}}
+
+.grid-field{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(95,122,92,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(95,122,92,0.08) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 90%);
+}
+
+/* fine film grain: keeps gradients from banding, gives every surface
+   the micro-texture of real material rather than flat digital color */
+.grain{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  opacity:0.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:240px 240px;
+  mix-blend-mode:overlay;
+}
+
+/* cursor aura */
+.aura{
+  position:fixed; width:420px; height:420px; border-radius:50%;
+  background:radial-gradient(circle, rgba(95,122,92,0.34), transparent 62%);
+  pointer-events:none; z-index:1;
+  transform:translate(-50%,-50%);
+  transition:opacity .4s;
+  opacity:0;
+}
+
+/* ---------- the thread (connective spine) ---------- */
+.thread-rail{
+  position:fixed; left:var(--thread-x); top:0; bottom:0;
+  width:2px; z-index:5;
+  background:rgba(95,122,92,0.14);
+}
+.thread-fill{
+  position:absolute; top:0; left:0; width:100%; height:0%;
+  background:linear-gradient(to bottom, var(--sage), var(--sage-deep));
+  box-shadow:0 0 12px rgba(95,122,92,0.5);
+  transition:height .1s linear;
+}
+.thread-node{
+  position:absolute; left:50%; transform:translateX(-50%);
+  width:9px; height:9px; border-radius:50%;
+  background:var(--beige); border:2px solid var(--sage);
+  transition:background .4s, box-shadow .4s, transform .4s;
+}
+.thread-node.lit{
+  background:var(--sage-deep);
+  box-shadow:0 0 0 5px rgba(95,122,92,0.18), 0 0 14px rgba(95,122,92,0.6);
+  transform:translateX(-50%) scale(1.25);
+}
+.thread-label{
+  position:absolute; left:16px; top:-4px;
+  font-family:var(--mono); font-size:9px; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--sage-deep);
+  opacity:0; transform:translateX(-6px);
+  transition:opacity .4s, transform .4s;
+  white-space:nowrap;
+}
+.thread-node.lit .thread-label{opacity:1; transform:translateX(0);}
+@media (max-width:820px){ .thread-rail{display:none;} }
+
+/* ---------- shared ---------- */
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px 0 96px; position:relative; z-index:2;}
+@media (max-width:820px){ .wrap{padding:0 22px;} }
+
+h1,h2{font-family:var(--display); margin:0; font-weight:600; letter-spacing:-0.015em; color:var(--pine);}
+h3,h4{font-family:var(--serif); margin:0; font-weight:600; letter-spacing:-0.01em; color:var(--pine);}
+p{margin:0 0 1em; color:var(--haze);}
+p:last-child{margin-bottom:0;}
+a{color:inherit;}
+
+.eyebrow{
+  font-family:var(--ui); font-size:11.5px; letter-spacing:0.3em;
+  text-transform:uppercase; color:var(--sage-deep);
+  display:inline-flex; align-items:center; gap:12px; margin-bottom:22px;
+  padding:7px 16px; border:1px solid var(--glass-line); border-radius:999px;
+  background:var(--glass); backdrop-filter:blur(8px);
+}
+.eyebrow::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--sage-deep); animation:blink 2.6s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+/* ---------- nav ---------- */
+header{
+  position:fixed; top:16px; left:50%; transform:translateX(-50%);
+  z-index:60; width:min(94vw, 900px);
+}
+.nav-pill{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:10px 22px;
+  background:rgba(244,238,222,0.6);
+  border:1px solid var(--glass-line);
+  border-radius:999px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 32px -12px rgba(46,58,46,0.25);
+}
+.brand{font-family:var(--display); font-weight:700; font-size:17px; letter-spacing:-0.01em; white-space:nowrap; color:var(--pine);}
+.brand span{color:var(--sage-deep);}
+nav ul{list-style:none; display:flex; gap:4px; margin:0; padding:0;}
+nav a{
+  font-family:var(--ui); font-size:12.5px; letter-spacing:0.1em;
+  text-decoration:none; color:var(--haze);
+  padding:7px 13px; border-radius:999px;
+  transition:color .3s, background .3s, box-shadow .3s;
+  white-space:nowrap;
+  border:1px solid transparent;
+}
+nav a:hover{
+  color:var(--pine);
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -3px 6px -4px rgba(46,58,46,0.1),
+    0 4px 12px -8px rgba(46,58,46,0.3);
+}
+nav a.active{
+  color:#25301F; font-weight:500;
+  background:linear-gradient(180deg, rgba(101,131,97,0.32), rgba(78,103,75,0.38));
+  border-color:rgba(255,255,255,0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -4px 8px -5px rgba(46,58,46,0.2),
+    0 4px 12px -6px rgba(63,84,60,0.45);
+}
+@media (max-width:640px){
+  nav a{padding:6px 8px; font-size:10px;}
+  .brand{font-size:13px;}
+}
+
+/* scroll progress in nav */
+.progress-ring{
+  width:26px; height:26px; flex:none;
+}
+.progress-ring circle{fill:none; stroke-width:3;}
+.progress-ring .track{stroke:rgba(95,122,92,0.18);}
+.progress-ring .fill{
+  stroke:var(--sage-deep); stroke-linecap:round;
+  stroke-dasharray:63; stroke-dashoffset:63;
+  transform:rotate(-90deg); transform-origin:center;
+  transition:stroke-dashoffset .1s linear;
+}
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:100svh;
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative; padding-top:70px;
+}
+.hero h1{
+  font-family:'Unbounded', sans-serif;
+  font-weight:500;
+  font-size:clamp(31px, 5.1vw, 65px);
+  line-height:1.2; max-width:none;
+  letter-spacing:-0.01em;
+}
+.hero h1 .grad{font-family:'Bricolage Grotesque', sans-serif; font-weight:700; font-size:1.12em; letter-spacing:-0.02em;}
+.hero h1 .row{display:block; overflow:hidden; padding-bottom:0.16em; margin-bottom:-0.16em;}
+.hero h1 .row > span{
+  display:inline-block;
+  transform:translateY(110%);
+  animation:riseIn 1s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay:var(--d);
+}
+@keyframes riseIn{to{transform:translateY(0);}}
+.hero h1 .grad{
+  background:linear-gradient(100deg, var(--sage-deep), var(--sage) 40%, #B99F63 75%, var(--sage-deep));
+  background-size:220% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:riseIn 1s cubic-bezier(.2,.8,.2,1) forwards, flow 7s linear 1.2s infinite;
+}
+@keyframes flow{to{background-position:220% 0;}}
+.hero-thesis{
+  margin-top:34px; max-width:52ch;
+  font-family:var(--body); font-size:18px; font-weight:400; line-height:1.65;
+  color:var(--haze);
+  opacity:0; animation:soften 1.1s ease .9s forwards;
+}
+.hero-thesis b{color:var(--pine); font-weight:600;}
+@keyframes soften{from{opacity:0; transform:translateY(16px); filter:blur(4px);} to{opacity:1; transform:translateY(0); filter:blur(0);}}
+.hero-cta{
+  margin-top:40px; display:flex; gap:14px; flex-wrap:wrap;
+  opacity:0; animation:soften 1.1s ease 1.25s forwards;
+}
+/* ---------- liquid glass core (shared by all buttons) ---------- */
+.btn, .filter-btn, .essay-toggle, #copy-email{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  backdrop-filter:blur(9px) saturate(160%);
+  -webkit-backdrop-filter:blur(9px) saturate(160%);
+}
+/* natural specular: a soft off-center pool of light + faint reflection
+   from below, layered like real light on curved glass */
+.btn::before, .filter-btn::before, .essay-toggle::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  border-radius:inherit;
+  background:
+    radial-gradient(120% 90% at 22% -12%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.12) 42%, rgba(255,255,255,0) 62%),
+    radial-gradient(90% 60% at 78% 118%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0) 30%);
+  pointer-events:none;
+}
+/* slow ambient sheen that drifts across on hover — light shifting, not glare */
+.btn::after, .filter-btn::after{
+  content:""; position:absolute; z-index:-1;
+  top:-70%; bottom:-70%; width:55%;
+  left:-70%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.2) 55%, transparent);
+  transform:skewX(-12deg);
+  filter:blur(6px);
+  transition:left 1.1s cubic-bezier(.25,.6,.2,1);
+  pointer-events:none;
+}
+.btn:hover::after, .filter-btn:hover::after{left:140%;}
+
+.btn{
+  font-family:var(--ui); font-size:13.5px; letter-spacing:0.08em;
+  text-decoration:none; padding:13px 26px; border-radius:999px;
+  cursor:pointer; display:inline-block;
+  will-change:transform;
+  border:1px solid rgba(255,255,255,0.5);
+  transition:transform .25s ease, box-shadow .3s ease, background .3s;
+}
+.btn.solid{
+  background:linear-gradient(180deg, rgba(101,131,97,0.32), rgba(78,103,75,0.38));
+  color:#25301F;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -6px 12px -6px rgba(46,58,46,0.26),
+    0 1px 2px rgba(46,58,46,0.12),
+    0 12px 30px -16px rgba(63,84,60,0.55);
+}
+.btn.solid:hover{
+  background:linear-gradient(180deg, rgba(101,131,97,0.4), rgba(78,103,75,0.45));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -6px 12px -6px rgba(46,58,46,0.22),
+    0 1px 2px rgba(46,58,46,0.1),
+    0 18px 38px -16px rgba(63,84,60,0.6);
+}
+.btn.ghost{
+  background:rgba(255,255,255,0.06);
+  color:var(--sage-deep);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -5px 10px -6px rgba(46,58,46,0.13),
+    0 1px 2px rgba(46,58,46,0.08),
+    0 10px 26px -18px rgba(46,58,46,0.4);
+}
+.btn.ghost:hover{
+  background:rgba(255,255,255,0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.75),
+    inset 0 -5px 10px -6px rgba(46,58,46,0.11),
+    0 1px 2px rgba(46,58,46,0.07),
+    0 16px 34px -18px rgba(46,58,46,0.5);
+}
+.btn:active{transform:scale(.97);}
+
+.hero-orbit{
+  position:absolute; right:4%; top:50%; transform:translateY(-50%);
+  width:min(34vw, 380px); height:min(34vw,380px);
+  pointer-events:none; opacity:0; animation:soften 1.4s ease 1s forwards;
+}
+.hero-orbit svg{width:100%; height:100%; overflow:visible;}
+.orbit-ring{fill:none; stroke:rgba(95,122,92,0.3); stroke-width:1; stroke-dasharray:3 7;}
+.orbit-ring.r2{stroke:rgba(185,159,99,0.35);}
+.orbit-spin{transform-origin:center; animation:spin 40s linear infinite;}
+.orbit-spin.rev{animation:spin 55s linear infinite reverse;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.orbit-dot{fill:var(--sage-deep);}
+.orbit-core{fill:none; stroke:var(--sage-deep); stroke-width:1.2;}
+.orbit-word{font-family:var(--mono); font-size:7.5px; fill:var(--sage-deep); letter-spacing:0.2em;}
+@media (max-width:960px){ .hero-orbit{display:none;} }
+
+/* ---------- flowing ribbon divider ---------- */
+.ribbon{
+  position:relative; z-index:2;
+  padding:22px 0; overflow:hidden;
+  border-top:1px solid var(--glass-line);
+  border-bottom:1px solid var(--glass-line);
+  background:var(--glass); backdrop-filter:blur(6px);
+}
+.ribbon-track{
+  display:flex; gap:56px; width:max-content;
+  animation:ribbon 30s linear infinite;
+  font-family:var(--mono); font-size:11px; letter-spacing:0.3em;
+  text-transform:uppercase; color:var(--sage-deep);
+  white-space:nowrap;
+}
+.ribbon:hover .ribbon-track{animation-play-state:paused;}
+@keyframes ribbon{to{transform:translateX(-50%);}}
+.ribbon-track i{font-style:normal; color:#B99F63;}
+
+/* ---------- sections ---------- */
+section{padding:120px 0; position:relative; z-index:2;}
+.section-head{margin-bottom:56px; max-width:700px;}
+.section-head h2{font-size:clamp(32px,4.2vw,54px); line-height:1.1;}
+.section-head .dek{margin-top:14px; font-family:var(--body); font-style:normal; font-size:16px; font-weight:400;}
+
+.reveal{opacity:0; transform:translateY(30px); filter:blur(3px); transition:opacity .9s ease, transform .9s ease, filter .9s ease;}
+.reveal.in{opacity:1; transform:translateY(0); filter:blur(0);}
+
+/* ---------- about ---------- */
+.about-grid{display:grid; grid-template-columns:1.5fr 1fr; gap:56px; align-items:start;}
+.about-body p{font-size:17.5px;}
+.about-body p+p{margin-top:1.15em;}
+.about-body .lead{font-family:var(--display); font-weight:600; font-size:21px; color:var(--pine); line-height:1.45;}
+.fact-stack{display:grid; gap:12px;}
+.fact{
+  background:var(--glass); backdrop-filter:blur(10px);
+  border:1px solid var(--glass-line); border-radius:18px;
+  padding:18px 22px;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.fact:hover{transform:translateY(-3px); box-shadow:0 14px 30px -18px rgba(46,58,46,0.35);}
+.fact dt{font-family:var(--mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep);}
+.fact dd{margin:5px 0 0; font-size:14.5px; color:var(--pine); line-height:1.5;}
+
+/* ---------- work ---------- */
+.filters{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:38px;}
+.filter-btn{
+  font-family:var(--ui); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.48); color:var(--haze);
+  padding:9px 18px; border-radius:999px; cursor:pointer;
+  transition:all .35s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -4px 8px -5px rgba(46,58,46,0.13),
+    0 1px 2px rgba(46,58,46,0.07),
+    0 8px 20px -16px rgba(46,58,46,0.4);
+}
+.filter-btn:hover{
+  color:var(--pine);
+  background:rgba(255,255,255,0.11);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -4px 8px -5px rgba(46,58,46,0.11),
+    0 1px 2px rgba(46,58,46,0.06),
+    0 12px 26px -16px rgba(46,58,46,0.5);
+}
+.filter-btn.active{
+  background:linear-gradient(180deg, rgba(101,131,97,0.32), rgba(78,103,75,0.38));
+  border-color:rgba(255,255,255,0.45); color:#25301F;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -5px 10px -6px rgba(46,58,46,0.24),
+    0 1px 2px rgba(46,58,46,0.1),
+    0 10px 24px -14px rgba(63,84,60,0.55);
+}
+.filter-btn:active{transform:scale(.96);}
+
+.work-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+@media (max-width:760px){ .work-grid{grid-template-columns:1fr;} }
+.work-card{
+  background:var(--glass); backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line); border-radius:22px;
+  padding:30px;
+  position:relative; overflow:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s, opacity .4s, border-color .4s;
+  transform-style:preserve-3d;
+}
+.work-card::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%), rgba(111,141,106,0.42), transparent 62%);
+  opacity:0; transition:opacity .4s; pointer-events:none;
+}
+.work-card:hover{box-shadow:0 22px 44px -22px rgba(46,58,46,0.4); border-color:var(--sage);}
+.work-card:hover::before{opacity:1;}
+.work-card.hide{opacity:0; transform:scale(.96); pointer-events:none; position:absolute; visibility:hidden;}
+.work-top{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;}
+.work-tag{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--sage-deep); border:1px solid var(--glass-line);
+  padding:5px 12px; border-radius:999px; background:rgba(255,255,255,0.4);
+}
+.work-when{font-family:var(--mono); font-size:11px; color:var(--haze);}
+.work-card h3{font-size:20px; line-height:1.25; margin-bottom:6px;}
+.work-card .sub{font-family:var(--mono); font-size:10.5px; color:#8A784B; letter-spacing:0.05em; display:block; margin-bottom:12px;}
+.work-card p{font-size:14.5px;}
+.work-link{
+  display:inline-flex; align-items:center; gap:8px; margin-top:16px;
+  font-family:var(--mono); font-size:12px; color:var(--sage-deep);
+  text-decoration:none;
+}
+.work-link::after{content:"→"; transition:transform .3s;}
+.work-link:hover::after{transform:translateX(5px);}
+.work-empty{
+  margin-top:18px;
+  border:1.5px dashed var(--glass-line); border-radius:22px;
+  padding:32px; text-align:center;
+  font-family:var(--mono); font-size:12px; color:var(--haze);
+}
+
+/* ---------- essays ---------- */
+.essay-item{
+  background:var(--glass); backdrop-filter:blur(10px);
+  border:1px solid var(--glass-line); border-radius:22px;
+  margin-bottom:14px; overflow:hidden;
+  transition:border-color .35s, box-shadow .35s;
+}
+.essay-item:hover{border-color:var(--sage);}
+.essay-item.open{box-shadow:0 18px 40px -22px rgba(46,58,46,0.35); border-color:var(--sage-deep);}
+.essay-head{
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  width:100%; text-align:left; background:none; border:none;
+  padding:26px 30px; cursor:pointer; color:inherit; font-family:inherit;
+}
+.essay-head h3{font-size:21px; transition:color .3s;}
+.essay-head:hover h3{color:var(--sage-deep);}
+.essay-dek{margin-top:6px; font-size:14.5px;}
+.essay-meta{font-family:var(--mono); font-size:10.5px; color:var(--haze); white-space:nowrap; display:flex; align-items:center; gap:14px;}
+.essay-toggle{
+  width:32px; height:32px; border-radius:50%; flex:none;
+  border:1px solid rgba(255,255,255,0.5); color:var(--sage-deep);
+  background:rgba(255,255,255,0.07);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), background .35s, color .35s, box-shadow .35s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -3px 6px -4px rgba(46,58,46,0.13),
+    0 5px 14px -10px rgba(46,58,46,0.4);
+}
+.essay-item.open .essay-toggle{
+  transform:rotate(135deg);
+  background:linear-gradient(180deg, rgba(101,131,97,0.32), rgba(78,103,75,0.38));
+  color:#25301F;
+  border-color:rgba(255,255,255,0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -4px 8px -5px rgba(46,58,46,0.22),
+    0 6px 16px -10px rgba(63,84,60,0.55);
+}
+.essay-body{max-height:0; overflow:hidden; transition:max-height .65s cubic-bezier(.4,0,.2,1);}
+.essay-body-inner{padding:0 30px 30px; max-width:64ch;}
+.essay-body-inner p{font-size:16px; color:var(--ink); opacity:.85;}
+.essay-body-inner p+p{margin-top:1.1em;}
+.soon{font-family:var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#8A784B;}
+
+/* ---------- resume ---------- */
+.res-flow{position:relative;}
+.res-block{
+  background:var(--glass); backdrop-filter:blur(10px);
+  border:1px solid var(--glass-line); border-radius:22px;
+  padding:32px 36px; margin-bottom:16px;
+  transition:border-color .35s;
+}
+.res-block:hover{border-color:var(--sage);}
+.res-block > h3{
+  font-family:var(--mono); font-size:10.5px; font-weight:500;
+  letter-spacing:0.26em; text-transform:uppercase;
+  color:var(--sage-deep); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+}
+.res-block > h3::after{content:""; flex:1; height:1px; background:var(--glass-line);}
+.res-entry{margin-bottom:26px;}
+.res-entry:last-child{margin-bottom:0;}
+.res-line{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap;}
+.res-line h4{font-size:18px;}
+.res-line .when{font-family:var(--mono); font-size:10.5px; color:var(--haze); white-space:nowrap;}
+.res-entry .role{font-family:var(--mono); font-size:11px; color:#8A784B; display:block; margin-top:3px;}
+.res-entry ul{margin:10px 0 0; padding-left:20px; font-size:14.5px; color:var(--haze);}
+.res-entry ul li{margin-bottom:6px;}
+.res-entry ul li::marker{color:var(--sage-deep);}
+.res-foot{
+  font-family:var(--mono); font-size:11px; color:var(--haze);
+  display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  padding:8px 12px;
+}
+
+/* ---------- contact ---------- */
+.contact-panel{
+  position:relative; overflow:hidden;
+  border-radius:28px;
+  background:linear-gradient(135deg, var(--sage-deep), #46603F 55%, #39503A);
+  color:var(--beige);
+  padding:80px 60px; text-align:center;
+}
+.contact-panel::before{
+  content:""; position:absolute; inset:-40%;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(241,238,228,0.14), transparent 40%),
+    radial-gradient(circle at 80% 75%, rgba(185,159,99,0.2), transparent 45%);
+  animation:panelDrift 18s ease-in-out infinite alternate;
+}
+@keyframes panelDrift{to{transform:translate(6%, -5%) scale(1.08);}}
+.contact-panel h2{color:var(--beige); font-size:clamp(30px,4.4vw,52px); position:relative; max-width:16ch; margin:0 auto;}
+.contact-panel p{color:rgba(241,238,228,0.75); position:relative; max-width:44ch; margin:18px auto 0;}
+.contact-actions{position:relative; margin-top:40px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+.contact-panel .btn.solid{
+  background:linear-gradient(180deg, rgba(248,245,236,0.32), rgba(233,228,213,0.2));
+  color:#F6F4EC; border-color:rgba(255,255,255,0.55);
+  text-shadow:0 1px 3px rgba(30,42,30,0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 -5px 10px -6px rgba(0,0,0,0.22),
+    0 1px 2px rgba(0,0,0,0.15),
+    0 14px 32px -16px rgba(0,0,0,0.5);
+}
+.contact-panel .btn.solid:hover{
+  background:linear-gradient(180deg, rgba(248,245,236,0.42), rgba(233,228,213,0.28));
+}
+.contact-panel .btn.ghost{
+  color:var(--beige); border-color:rgba(241,238,228,0.45);
+  background:rgba(241,238,228,0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -4px 8px -5px rgba(0,0,0,0.25),
+    0 1px 2px rgba(0,0,0,0.12),
+    0 10px 26px -16px rgba(0,0,0,0.45);
+}
+.contact-panel .btn.ghost:hover{
+  background:rgba(241,238,228,0.13);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    inset 0 -4px 8px -5px rgba(0,0,0,0.2),
+    0 1px 2px rgba(0,0,0,0.1),
+    0 16px 34px -16px rgba(0,0,0,0.5);
+}
+.copied-note{
+  position:relative; font-family:var(--mono); font-size:11px;
+  color:#E3C889; margin-top:16px; opacity:0; transition:opacity .3s;
+}
+.copied-note.show{opacity:1;}
+.contact-form{
+  position:relative; margin:42px auto 0; max-width:560px;
+  display:flex; flex-direction:column; gap:12px; text-align:left;
+}
+.cf-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media (max-width:560px){ .cf-row{grid-template-columns:1fr;} }
+.contact-form input, .contact-form textarea{
+  font-family:var(--body); font-size:15px; color:var(--beige);
+  background:rgba(241,238,228,0.08);
+  border:1px solid rgba(241,238,228,0.35);
+  border-radius:14px; padding:13px 16px;
+  backdrop-filter:blur(9px);
+  resize:vertical;
+  transition:border-color .3s, background .3s;
+}
+.contact-form input::placeholder, .contact-form textarea::placeholder{color:rgba(241,238,228,0.5);}
+.contact-form input:focus, .contact-form textarea:focus{
+  outline:none; border-color:rgba(241,238,228,0.7); background:rgba(241,238,228,0.13);
+}
+.contact-form .btn{align-self:flex-start;}
+.cf-status{font-family:var(--mono); font-size:12px; color:#E3C889; min-height:1em; margin:0;}
+
+footer{padding:50px 0 70px; text-align:center; position:relative; z-index:2;}
+footer p{font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; color:var(--haze);}
+
+@media (max-width:820px){
+  section{padding:88px 0;}
+  .about-grid{grid-template-columns:1fr;}
+  .contact-panel{padding:52px 26px;}
+  .res-block{padding:26px 22px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ambient -->
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grid-field"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="aura" id="aura"></div>
+
+<!-- connective thread -->
+<div class="thread-rail" id="thread-rail">
+  <div class="thread-fill" id="thread-fill"></div>
+</div>
+
+<header>
+  <div class="nav-pill">
+    <div class="brand">Stephanie <span>Kim</span></div>
+    <nav>
+      <ul>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#work" class="nav-link">Work</a></li>
+        <li><a href="#essays" class="nav-link">Essays</a></li>
+        <li><a href="#resume" class="nav-link">Resume</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <svg class="progress-ring" viewBox="0 0 26 26" aria-hidden="true">
+      <circle class="track" cx="13" cy="13" r="10"/>
+      <circle class="fill" id="ring-fill" cx="13" cy="13" r="10"/>
+    </svg>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <h1 aria-label="Philosopher's depth. Engineer's precision. Creator's instinct.">
+      <span class="row"><span style="--d:.1s">Philosopher&rsquo;s depth.</span></span>
+      <span class="row"><span style="--d:.28s">Engineer&rsquo;s precision.</span></span>
+      <span class="row"><span class="grad" style="--d:.46s">Creator&rsquo;s instinct.</span></span>
+    </h1>
+    <p class="hero-thesis">Stephanie Kim — a former <b>liberal arts &amp; philosophy</b> person who values creativity and difference in perspectives, now creating things by turning the unstructured into something more valuable: <b>insightful data</b>.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn solid magnetic">See the work</a>
+      <a href="#essays" class="btn ghost magnetic">Read the essays</a>
+    </div>
+  </div>
+  <div class="hero-orbit" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <g class="orbit-spin">
+        <circle class="orbit-ring" cx="100" cy="100" r="92"/>
+        <circle class="orbit-dot" cx="100" cy="8" r="3.5"/>
+      </g>
+      <g class="orbit-spin rev">
+        <circle class="orbit-ring r2" cx="100" cy="100" r="64"/>
+        <circle class="orbit-dot" cx="164" cy="100" r="3" style="fill:#B99F63"/>
+      </g>
+      <circle class="orbit-core" cx="100" cy="100" r="30"/>
+      <text class="orbit-word" x="100" y="97" text-anchor="middle">SEOUL·HK</text>
+      <text class="orbit-word" x="100" y="109" text-anchor="middle">EST. 2025</text>
+    </svg>
+  </div>
+</section>
+
+<div class="ribbon" aria-hidden="true">
+  <div class="ribbon-track" id="ribbon-track"></div>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">01 · About</span>
+      <h2>Two educations, one person.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal" id="about-body"></div>
+      <div class="fact-stack reveal" id="about-facts"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">02 · Work</span>
+      <h2>Invented, investigated, organized.</h2>
+      <p class="dek">A patent, three research threads, an app, and a cause — filter by kind, and watch this grid grow.</p>
+    </div>
+    <div class="filters reveal" id="filters"></div>
+    <div class="work-grid reveal" id="work-list"></div>
+    <div class="work-empty reveal">+ the next card goes here — add it in the CONTENT block at the top of this file's script</div>
+  </div>
+</section>
+
+<!-- ================= ESSAYS ================= -->
+<section id="essays">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">03 · Essays</span>
+      <h2>Thinking, left in the open.</h2>
+      <p class="dek">Short public pieces — tap one to unfold it right here.</p>
+    </div>
+    <div id="essay-list" class="reveal"></div>
+  </div>
+</section>
+
+<!-- ================= RESUME ================= -->
+<section id="resume">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">04 · Resume</span>
+      <h2>The formal record.</h2>
+    </div>
+    <div class="res-flow reveal" id="resume-shell"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-panel reveal">
+      <h2>Bring me a view I haven't held yet.</h2>
+      <p>Collaboration, research, or a well-made argument — my inbox is open.</p>
+      <div class="contact-actions">
+        <a class="btn solid magnetic" href="mailto:stephaniekim0112@gmail.com">Email me</a>
+        <button class="btn ghost magnetic" id="copy-email">Copy address</button>
+        <a class="btn ghost magnetic" href="https://github.com/stephaniekim28" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="copied-note" id="copied-note">stephaniekim0112@gmail.com — copied</p>
+      <form class="contact-form" id="contact-form" hidden>
+        <div class="cf-row">
+          <input type="text" name="name" id="cf-name" placeholder="Your name" required>
+          <input type="email" name="email" id="cf-email" placeholder="Your email" required>
+        </div>
+        <textarea name="message" id="cf-msg" rows="5" placeholder="Your message — a project, a question, a well-made argument…" required></textarea>
+        <button type="submit" class="btn solid" id="cf-send">Send message</button>
+        <p class="cf-status" id="cf-status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>STEPHANIE KIM · <span id="year"></span> · HONG KONG</p>
+</footer>
+
+<script src="content.js"></script>
+<script>
+/* Content lives in content.js (edit with admin.html). If content.js is missing,
+   the built-in copy below keeps the site working as a single file. */
+/* single-file mode: the embedded copy below is the default content source;
+   if a content.js file is present alongside this file, it takes precedence. */
+if(!window.CONTENT){
+  window.CONTENT = {
+  "ribbon": [
+    "philosophy",
+    "❋",
+    "data science",
+    "❋",
+    "invention",
+    "❋",
+    "linguistics",
+    "❋",
+    "macroeconomics",
+    "❋",
+    "한국어 · english · français",
+    "❋"
+  ],
+  "about": {
+    "paragraphs": [
+      {
+        "lead": true,
+        "text": "Most people pick a lane. I picked a bridge."
+      },
+      {
+        "lead": false,
+        "text": "My first education was in reading closely — Stoics and sutras, arguments and their counterarguments, the discipline of taking a position you disagree with seriously enough to state it better than its defenders do. It taught me that difference of view isn't noise to be averaged away; it's where the information is."
+      },
+      {
+        "lead": false,
+        "text": "My second education is happening now, in mathematics and code. Somewhere along the way I filed a US patent, spent a year tracing why the yen fell forty points against the dollar, hunted for ancient Korean cognates in Tamil farm vocabulary, and co-ran an organization that helped four North Korean defectors reach safety. None of that was on a syllabus. All of it was the same instinct: notice what others walk past, then do something rigorous about it."
+      }
+    ],
+    "facts": [
+      [
+        "Studying",
+        "BA & BEng in AI and Data Science, HKU · Class of 2030"
+      ],
+      [
+        "Holds",
+        "US Patent No. 11,324,293 B2 — self-filed and prosecuted"
+      ],
+      [
+        "Honored with",
+        "HKSAR Government Scholarship · HKU Entrance Scholarship"
+      ],
+      [
+        "Speaks",
+        "Korean (native) · English (fluent) · French (DELF B1)"
+      ],
+      [
+        "Serves as",
+        "Student Ambassador, HKU · Data Science Association"
+      ]
+    ]
+  },
+  "work": [
+    {
+      "tag": "Invention",
+      "when": "Issued 2022",
+      "title": "Tip-Proof Suitcase — US Patent 11,324,293 B2",
+      "sub": "Inventor · USPTO",
+      "desc": "A travel bag whose pivoting case rides a multi-wheel frame, keeping every wheel grounded at any tilt so it can't tip and the load never strains the wrist. I wrote, filed, and prosecuted the claims myself, amending them round after round against prior art.",
+      "link": null,
+      "linkLabel": null
+    },
+    {
+      "tag": "Research",
+      "when": "2023 – 2024",
+      "title": "Why the Yen Fell: Rates, Carry, and Control",
+      "sub": "Independent researcher · macroeconomics",
+      "desc": "Traced how the Fed's 2022–23 hikes opened a U.S.–Japan differential that pulled capital out of yen, driving USD/JPY from ~115 to ~152 — and read the Bank of Japan's yield-curve control as strategy, not paralysis. Called the late-2024 recovery before it arrived.",
+      "link": null,
+      "linkLabel": null
+    },
+    {
+      "tag": "Research",
+      "when": "2023 – 2024",
+      "title": "Korean, Tamil & Japanese: Words That Traveled",
+      "sub": "Independent researcher · comparative linguistics",
+      "desc": "Followed phonological echoes between Korean and Tamil in the vocabulary of kinship and farm tools, cross-checked against migration and DNA studies — then mapped Korean–Japanese place-name parallels, exploiting the fact that place names outlive everything else.",
+      "link": null,
+      "linkLabel": null
+    },
+    {
+      "tag": "Research",
+      "when": "2022 – 2023",
+      "title": "The Lapis Lazuli Road",
+      "sub": "Co-author · history of ideas",
+      "desc": "Co-wrote a paper on how one blue stone's trade routes carried philosophy and religion between East and West — and argued that what civilizations share can be engineered into frameworks for resolving what divides them.",
+      "link": null,
+      "linkLabel": null
+    },
+    {
+      "tag": "Build",
+      "when": "2020 – 2025",
+      "title": "Anthrophenomics",
+      "sub": "Independent creator · app design",
+      "desc": "Designed a face-analysis app rooted in biological anthropology, mapping inherited features along a climate-based spectrum, with a model that routes users toward personalized healthcare and product services.",
+      "link": null,
+      "linkLabel": null
+    },
+    {
+      "tag": "Community",
+      "when": "2020 – 2025",
+      "title": "Two for One",
+      "sub": "Co-President · North Korean defector support",
+      "desc": "Co-led the fundraising and awareness effort — $8,978 raised, four people brought to safety. Street campaigns, open interviews with defectors, and an outreach trip to Jeju Island.",
+      "link": null,
+      "linkLabel": null
+    }
+  ],
+  "essays": [
+    {
+      "title": "의식과 인지의 층 — Layers of Consciousness and Cognition",
+      "dek": "네 단계의 인지, 초록이 아닌 잎, 그리고 이카루스 — Korean original, followed by an English rendering.",
+      "date": "—",
+      "body": [
+        "단계적으로 사유해보자. 제1단계는 피상적 인지다. 자신의 사유 체계를 기준으로 타자와 사물을 규정하고 판단하는 것. 내가 원하는 것을 타인이 원하지 않을 때, 우리는 그 간극을 근거로 상대를 어떠한 인간이라 정의 내린다. 제2단계는 그 확장이다. 자신의 ego를 벗어나, 다른 개체와 인격체 역시 나와 마찬가지로 고유한 사유 체계와 방향성을 지닌 존재임을 받아들이는 것. 나의 이상과 충돌하는 것처럼 보이더라도, 나의 윤리관과 상이한 구조로 작동하는 시스템이라도 — 그것을 있는 그대로 두는 것이다. 제3단계는 여기에 새로운 차원을 더하는 일이다. '나'라는 구속에서 탈각하여, 나와 나를 둘러싼 모든 것을 관찰자의 시선으로 바라보는 것 — 이것이 메타인지다. 그리고 제4단계는 깨달음이다. 모든 것이 궁극적으로 나의 '인지' 안에서 일어나고 있음을 아는 것. 무한히 어두운 공간 속에서 손전등을 이리저리 비출 때, 그 빛이 닿은 자리가 곧 '나'라는 존재의 인지다. 이 경지에 이르면, 세상의 모든 현상이 사사로운 것임을, 무엇이 어떻게 되든 그것에 절대적 의미란 없음을 확인하게 된다.",
+        "그렇다면 여기서 지속적으로 등장하는 '인지'와 '의식'이란 과연 무엇인가. 어떤 척도로 무엇이 참인지를 확인할 수 있는가. 그리고 진정한 '앎'이란 무엇을 의미하는가. 하나의 질문을 던져보자: 식물의 잎은 과연 초록색인가? 우리의 시각과 정보 처리 과정만을 기준으로 삼는다면, 이 질문의 답은 자명한 참으로 보인다. 그러나 과학의 진보는 우리에게 다른 사실을 알려준다 — 그 '초록색'은 잎이 가장 적게 흡수하는 파장의 빛이 반사된 결과일 뿐이며, 우리는 그것을 초록이라 믿어왔을 따름이다. 이 깨달음이 암시하는 바는 명확하다: 우리는 단순한 감각적 인지를 근거로 무엇이 참이라 단언할 수 없다.",
+        "\"인간은 유한한 존재다.\" 이것은 보편적으로 누구나 수긍할 수 있는, 지극히 자명한 명제다. 그렇다면 그 유한함의 실체를 들여다보자. 지식이란 무한히 확장되는 개념이다. 그 범위를 인류가 역사적으로 축적해온 앎의 총체로 한정하고, 이것을 하나의 커다란 원이라 상정해보자. 한 개인의 삶은 그 원을 채워나가는 색칠공부다. 어떤 이는 한 분야를 깊이 파고들어 뾰족한 형태를 그리고, 또 어떤 이는 여러 분야를 두루 탐색하여 넓은 타원을 그린다. 그러나 어떤 개인도 인류가 쌓아온 지식의 전체를 온전히 터득하는 것은 불가능에 가깝다.",
+        "역설이 여기 있다 — 우리가 '유한하다'고 이름 붙인 그 범위조차, 한 개인에게는 사실상 무한에 가깝다. 결국 인간은 '무한'이라는 섬을 향해 지식의 항해를 떠나지만, 끊임없이 나아가려는 시도만 할 수 있을 뿐 — 그 섬에 발을 딛는 일은 영영 허락되지 않는다. 여기까지 읽은 독자라면 이런 의문이 들 수 있다. 지금껏 해온 것도, 앞으로 해볼 수 있는 것도, 무한의 척도 앞에선 결국 한없이 작은 유한에 불과한데 — 그렇다면 우리의 노력은 의미조차 없는 것인가? 왜 더 높은 이상을 추구해야 하는가? 이에 대한 답은 역설적이게도 인간이라는 존재의 본질 안에 이미 있다.",
+        "그리스 신화 속 이카루스를 떠올려보자. 다이달로스와 그의 아들 이카루스는 새의 깃털과 밀랍으로 만든 날개를 달고 하늘로 날아오른다. 아버지는 경고한다: 너무 높이 날면 밀랍이 녹으니 적당히 날아라. 그러나 이카루스는 더 높이, 태양을 향해 날았고 — 밀랍이 녹아 바다로 추락한다. 이카루스의 죽음은 비극인가? 결코 그렇지 않다. 그는 태양으로 상징되는 무한, 혹은 이상에 가닿으려 하다가 죽음을 맞이한 것이다. 인간의 한계를 넘어서려는 시도 — 그 자체가 그의 삶의 의미였다.",
+        "인간은 유한하며 무한에 다다를 수 없다. 그러나 바로 그렇게 작은 존재이기에, 미시적 관점에서 우리의 시도와 앎을 향한 분투는 작은 우리 안에서 상대적으로 충분히 숭고하고 아름다운 의미를 가진다.",
+        "⸻ English rendering ⸻",
+        "Let us think in stages. The first layer is superficial cognition: defining and judging others and things against the standard of one's own system of thought. When someone does not want what I want, we take that gap as grounds to pronounce what kind of person they are. The second layer is its expansion — stepping outside one's ego and accepting that other beings, other minds, possess systems of thought and directions of their own, just as I do. Even what seems to collide with my ideals, even a system operating on a structure alien to my ethics — the second layer lets it stand as it is. The third layer adds a new dimension: shedding the constraint called 'I' and regarding myself and everything around me through an observer's eyes — this is metacognition. And the fourth layer is realization: knowing that everything, ultimately, is taking place inside my own cognition. When a flashlight sweeps through an infinitely dark space, the patch its beam touches is precisely the cognition of the being called 'I.' Arriving here, one confirms that every phenomenon in the world is a private affair — that whatever happens, and however it happens, carries no absolute meaning.",
+        "Then what, exactly, are this 'cognition' and 'consciousness' that keep appearing? By what measure can we confirm what is true? And what does genuine 'knowing' mean? Consider one question: is the leaf of a plant actually green? If we take only our vision and our information processing as the standard, the answer appears self-evidently true. But the progress of science tells us otherwise — that 'green' is merely the reflection of the wavelengths a leaf absorbs least, and we have simply believed it to be green all along. The implication is unambiguous: we cannot declare what is true on the basis of raw sensory cognition alone.",
+        "\"The human being is finite.\" This is a proposition so self-evident that anyone can accept it. Then let us examine what that finitude actually consists of. Knowledge is a concept that expands without limit. Confine its range to the sum of what humanity has historically accumulated, and picture it as one enormous circle. An individual life is a coloring exercise inside that circle. One person digs deep into a single field and draws a sharp, pointed shape; another surveys many fields and traces a broad ellipse. But for any individual to fully master the whole of accumulated human knowledge is close to impossible.",
+        "Here lies the paradox — even the range we have named 'finite' is, to a single person, effectively infinite. So the human being sets sail across knowledge toward an island called 'the infinite,' able only to keep advancing, never once permitted to set foot on its shore. A reader who has come this far may well ask: if everything we have done and everything we might yet do amounts, against the measure of infinity, to a vanishingly small finitude — then is our effort meaningless? Why pursue higher ideals at all? The answer, paradoxically, already lies within the nature of the human being itself.",
+        "Recall Icarus. Daedalus and his son rise into the sky on wings of feathers and wax. The father warns: fly too high and the wax will melt — keep to the middle path. But Icarus flew higher, toward the sun — and the wax melted, and he fell into the sea. Is his death a tragedy? Not at all. He died reaching for the infinite — for the ideal — that the sun stands for. The attempt to exceed human limits was itself the meaning of his life.",
+        "The human being is finite and can never arrive at the infinite. But precisely because we are such small beings, our attempts — our struggle toward knowing — hold, within our smallness and seen at our own scale, a meaning sublime and beautiful enough."
+      ]
+    },
+    {
+      "title": "On Motivation",
+      "dek": "External validation is evolution's inheritance. What remains beneath it — motivation that answers to no observer — may be the only thing genuinely one's own.",
+      "date": "—",
+      "body": [
+        "Humans, since the age of hunter-gatherers, have sought external validation — not as a matter of preference, but as of survival. To hunt, to contribute, to prove one's worth to society. These were not social niceties but necessary conditions of persistent existence. Those who failed to perform, or failed to have been seen performing, were excluded, and thus, did not survive. Therefore, the drive toward external validation across generations was not merely cultivated — it was selected for. It became, in the most literal sense, constitutive of our very being.",
+        "This is the inheritance we carry. The architecture of modern ambition — the compulsion to be recognized, measured, and affirmed by others — is not a corruption of human nature. It is among its most faithful expressions.",
+        "And yet.",
+        "I hold that it is possible, through sustained meditative discipline and the practice of genuine self discovery, to nurture something beneath that inheritance. A motivation that is neither performing for an audience nor responding to a social gradient, neither shaped by the fear of exclusion nor contingent on the approval of others — but rather originating from within, and from within alone. This is what I mean by internal motivation.",
+        "I do not claim the distinction is utterly translucent. Human psychology does not allow direct distinctions. We are porous beings. What presents itself as pure authentic desire has, in most cases, been quietly and systematically morphed by our surroundings — the beings we interact with, media we consume, and of course, a myriad of influences that shape our inner beings. The boundary between the 'self' and society resists precise dichotomy, and I hold no illusion that it is otherwise.",
+        "However, the difficulty of the distinction must not be allowed to dissolve its importance. The pursuit of motivation untouched by external circumstance — a willpower that remains coherent even under no observation but one's own — constitutes, I would argue, one of the few things that can be called genuinely one's own. And it is precisely that which matters, to anyone attempting to live a life that is theirs."
+      ]
+    }
+  ],
+  "resume": {
+    "blocks": [
+      {
+        "heading": "Education",
+        "entries": [
+          {
+            "title": "The University of Hong Kong",
+            "when": "Sep 2025 – May 2030 (expected)",
+            "role": "Bachelor of Arts & Bachelor of Engineering in AI and Data Science",
+            "points": [
+              "HKSAR Government Scholarship Fund Recipient (2025)",
+              "HKU Undergraduate Entrance Scholarship for Outstanding Academic Talents (2025)",
+              "Member, Data Science Association · Student Ambassador, HKU (2025 – present)",
+              "SAT 1560 (EBRW 770 · Math 790)"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Patent",
+        "entries": [
+          {
+            "title": "Suitcase — US Patent No. 11,324,293 B2",
+            "when": "Issued May 10, 2022",
+            "role": "Inventor · USPTO",
+            "points": [
+              "Invented a travel bag with a pivoting case on a multi-wheel frame keeping all four wheels in continuous ground contact regardless of tilt, eliminating tip-over risk",
+              "Designed an angle-maintaining unit and ergonomic adjusting mechanism keeping the center of gravity within the wheel base, reducing strain on hand, wrist, and shoulder",
+              "Filed and prosecuted the application with the USPTO, iteratively amending claims to ensure non-infringement of prior art"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Research Experience",
+        "entries": [
+          {
+            "title": "Global Interest Rates & Exchange-Rate Dynamics",
+            "when": "Dec 2023 – Jul 2024",
+            "role": "Independent Student Researcher · 3 hrs/wk",
+            "points": [
+              "Analyzed how 2022–23 Fed rate hikes created a U.S.–Japan rate differential driving capital from yen to dollar assets, pushing USD/JPY from ~115 to ~152",
+              "Examined the Bank of Japan's Yield Curve Control as deliberate policy, tracking its dismantlement in 2024",
+              "Assessed the carry trade as a depreciation amplifier and forecasted the yen recovery that materialized in late 2024"
+            ]
+          },
+          {
+            "title": "East–West Ideological Exchange via Lapis Lazuli Trade",
+            "when": "Sep 2022 – Nov 2023",
+            "role": "Co-Author · Independent Research · 3 hrs/wk",
+            "points": [
+              "Co-authored a paper on how ancient trade routes facilitated philosophical and religious exchange between East and West",
+              "Argued from historical, archaeological, and religious sources that civilizational commonalities can frame conflict resolution"
+            ]
+          },
+          {
+            "title": "Comparative Linguistics — Korean, Tamil & Japanese",
+            "when": "Aug 2023 – Nov 2024",
+            "role": "Independent Researcher · 4 hrs/wk",
+            "points": [
+              "Identified shared phonological patterns between Korean and Tamil vocabulary, supported by migration and DNA research",
+              "Documented Korean–Japanese place-name parallels, leveraging the principle that place names resist change"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Leadership & Activities",
+        "entries": [
+          {
+            "title": "Anthrophenomics — App Design & Development",
+            "when": "Dec 2020 – Feb 2025",
+            "role": "Independent Creator",
+            "points": [
+              "Conceptualized and designed a face-analysis app grounded in biological anthropology, mapping inherited features across a climate-based spectrum",
+              "Developed a business model connecting users to personalized healthcare and product services"
+            ]
+          },
+          {
+            "title": "Two for One — North Korean Defector Support Organization",
+            "when": "Mar 2020 – Feb 2025",
+            "role": "Co-President · 4 hrs/wk",
+            "points": [
+              "Co-led a volunteer organization; fundraised $8,978, enabling the safe rescue of four individuals",
+              "Organized street campaigns, open interviews with defectors, and an outreach trip to Jeju Island"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Skills & Languages",
+        "entries": [
+          {
+            "title": "Technical & Analytical",
+            "when": "",
+            "role": "",
+            "points": [
+              "Python (via coursework) · foundational data structures & algorithms",
+              "Financial data research · quantitative analysis · academic research & writing",
+              "English (fluent) · Korean (native) · French (DELF B1, 2022)"
+            ]
+          }
+        ]
+      }
+    ],
+    "footNote": "stephaniekim0112@gmail.com · Hong Kong",
+    "updated": "July 2026"
+  },
+  "settings": {
+    "formspreeId": "",
+    "email": "stephaniekim0112@gmail.com"
+  }
+};
+}
+const CONTENT = window.CONTENT;
+
+/* ================================================================
+   RENDERING & INTERACTION — no need to edit below this line
+   ================================================================ */
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ribbon (duplicated for seamless loop) */
+(function(){
+  const items = CONTENT.ribbon.map(t=>/❋/.test(t)?`<i>${t}</i>`:`<span>${esc(t)}</span>`).join("");
+  document.getElementById('ribbon-track').innerHTML = items + items;
+})();
+
+/* about */
+document.getElementById('about-body').innerHTML =
+  CONTENT.about.paragraphs.map(p=>`<p class="${p.lead?'lead':''}">${esc(p.text)}</p>`).join("");
+document.getElementById('about-facts').innerHTML =
+  CONTENT.about.facts.map(([dt,dd])=>`<dl class="fact"><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></dl>`).join("");
+
+/* work */
+(function(){
+  const list = document.getElementById('work-list');
+  list.innerHTML = CONTENT.work.map(w=>`
+    <article class="work-card" data-tag="${esc(w.tag)}">
+      <div class="work-top"><span class="work-tag">${esc(w.tag)}</span><span class="work-when">${esc(w.when)}</span></div>
+      <h3>${esc(w.title)}</h3>
+      <span class="sub">${esc(w.sub)}</span>
+      <p>${esc(w.desc)}</p>
+      ${w.link?`<a class="work-link" href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.linkLabel||"View")}</a>`:""}
+    </article>`).join("");
+
+  const tags = [...new Set(CONTENT.work.map(w=>w.tag))];
+  const filters = document.getElementById('filters');
+  filters.innerHTML = `<button class="filter-btn active" data-f="all">All</button>` +
+    tags.map(t=>`<button class="filter-btn" data-f="${esc(t)}">${esc(t)}</button>`).join("");
+  filters.addEventListener('click', e=>{
+    const btn = e.target.closest('.filter-btn'); if(!btn) return;
+    filters.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    list.querySelectorAll('.work-card').forEach(c=>{
+      c.classList.toggle('hide', btn.dataset.f!=="all" && c.dataset.tag!==btn.dataset.f);
+    });
+  });
+
+  /* card glow follows the cursor */
+  list.addEventListener('pointermove', e=>{
+    const card = e.target.closest('.work-card'); if(!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+  });
+})();
+
+/* essays */
+(function(){
+  const el = document.getElementById('essay-list');
+  el.innerHTML = CONTENT.essays.map((e,i)=>{
+    const has = e.body && e.body.length;
+    return `
+    <div class="essay-item">
+      <button class="essay-head" aria-expanded="false">
+        <div>
+          <h3>${esc(e.title)}</h3>
+          <p class="essay-dek">${esc(e.dek)}</p>
+        </div>
+        <span class="essay-meta">${esc(e.date)} ${has?'<span class="essay-toggle">+</span>':'<span class="soon">coming soon</span>'}</span>
+      </button>
+      ${has?`<div class="essay-body"><div class="essay-body-inner">${e.body.map(p=>`<p>${esc(p)}</p>`).join("")}</div></div>`:""}
+    </div>`;
+  }).join("");
+  el.addEventListener('click', ev=>{
+    const head = ev.target.closest('.essay-head'); if(!head) return;
+    const item = head.parentElement;
+    const body = item.querySelector('.essay-body'); if(!body) return;
+    const open = item.classList.toggle('open');
+    head.setAttribute('aria-expanded', open);
+    body.style.maxHeight = open ? body.scrollHeight+'px' : '0px';
+  });
+})();
+
+/* resume */
+(function(){
+  document.getElementById('resume-shell').innerHTML =
+    CONTENT.resume.blocks.map(b=>`
+      <div class="res-block">
+        <h3>${esc(b.heading)}</h3>
+        ${b.entries.map(en=>`
+          <div class="res-entry">
+            <div class="res-line"><h4>${esc(en.title)}</h4>${en.when?`<span class="when">${esc(en.when)}</span>`:""}</div>
+            ${en.role?`<span class="role">${esc(en.role)}</span>`:""}
+            ${en.points&&en.points.length?`<ul>${en.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}
+          </div>`).join("")}
+      </div>`).join("") +
+    `<div class="res-foot"><span>${esc(CONTENT.resume.footNote)}</span><span>Updated ${esc(CONTENT.resume.updated)}</span></div>`;
+})();
+
+/* ---------- the thread: fills with scroll, nodes light per section ---------- */
+(function(){
+  const rail = document.getElementById('thread-rail');
+  const fill = document.getElementById('thread-fill');
+  const sections = [...document.querySelectorAll('section[id]')];
+  const nodes = new Map();
+
+  function placeNodes(){
+    nodes.forEach(n=>n.remove()); nodes.clear();
+    const docH = document.documentElement.scrollHeight - innerHeight;
+    sections.forEach(s=>{
+      const y = (s.offsetTop + 10) / document.documentElement.scrollHeight * 100;
+      const node = document.createElement('div');
+      node.className = 'thread-node';
+      node.style.top = y + '%';
+      node.innerHTML = `<span class="thread-label">${s.id}</span>`;
+      rail.appendChild(node);
+      nodes.set(s.id, node);
+    });
+  }
+  placeNodes();
+  addEventListener('resize', placeNodes);
+
+  const ring = document.getElementById('ring-fill');
+  function onScroll(){
+    const docH = document.documentElement.scrollHeight - innerHeight;
+    const p = Math.min(1, Math.max(0, scrollY / docH));
+    fill.style.height = (p*100) + '%';
+    ring.style.strokeDashoffset = 63 - 63*p;
+    /* light nodes the fill has passed */
+    const fillBottom = p * document.documentElement.scrollHeight;
+    nodes.forEach((node, id)=>{
+      const s = document.getElementById(id);
+      node.classList.toggle('lit', fillBottom >= s.offsetTop);
+    });
+  }
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+/* reveals */
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}
+}),{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* nav active */
+const navLinks = document.querySelectorAll('.nav-link');
+const so = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    navLinks.forEach(l=>l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id));
+  }
+}),{rootMargin:'-40% 0px -55% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>so.observe(s));
+
+/* cursor aura + magnetic buttons */
+(function(){
+  if(reduced || matchMedia('(pointer:coarse)').matches) return;
+  const aura = document.getElementById('aura');
+  addEventListener('pointermove', e=>{
+    aura.style.opacity = 1;
+    aura.style.left = e.clientX+'px';
+    aura.style.top = e.clientY+'px';
+  });
+  document.querySelectorAll('.magnetic').forEach(btn=>{
+    btn.addEventListener('pointermove', e=>{
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width/2) * 0.25;
+      const y = (e.clientY - r.top - r.height/2) * 0.35;
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    btn.addEventListener('pointerleave', ()=>{ btn.style.transform = ''; });
+  });
+})();
+
+/* copy email */
+document.getElementById('copy-email').addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText('stephaniekim0112@gmail.com');
+    const n = document.getElementById('copied-note');
+    n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2200);
+  }catch(e){ location.href = 'mailto:stephaniekim0112@gmail.com'; }
+});
+
+/* contact form → Formspree (set settings.formspreeId in content.js / admin.html) */
+(function(){
+  const id = (CONTENT.settings && CONTENT.settings.formspreeId || "").trim();
+  if(!id) return; // no backend configured yet — buttons above still work
+  const form = document.getElementById('contact-form');
+  form.hidden = false;
+  const status = document.getElementById('cf-status');
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const btn = document.getElementById('cf-send');
+    btn.disabled = true; status.textContent = "sending…";
+    try{
+      const res = await fetch("https://formspree.io/f/" + id, {
+        method:"POST",
+        headers:{ "Accept":"application/json" },
+        body:new FormData(form)
+      });
+      if(res.ok){
+        form.reset();
+        status.textContent = "sent — thank you. I read everything.";
+      }else{
+        status.textContent = "hmm, that didn't go through — try the email button above.";
+      }
+    }catch(err){
+      status.textContent = "network hiccup — try the email button above.";
+    }
+    btn.disabled = false;
+  });
+})();
+
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
